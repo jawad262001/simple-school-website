@@ -1,12 +1,10 @@
-name: CI - Build
+name: CI Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -19,17 +17,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: '18'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Run Linter
+        run: npm run lint --if-present
+
+      - name: Run Tests
+        run: npm test --if-present
 
       - name: Build project
-        run: |
-          echo "🚀 Starting build..."
-          npm run build
-
-      - name: Show build logs if failed
-        if: failure()
-        run: |
-          echo "❌ Build failed! Check vite.config.ts, tailwind.config.js, or missing env vars."
+        run: npm run build
