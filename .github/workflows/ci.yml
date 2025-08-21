@@ -1,0 +1,39 @@
+name: CI - Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build the project
+      - name: Build project
+        run: npm run build
+
+      # Step 5: Run tests (optional)
+      - name: Run tests
+        run: |
+          if [ -f package.json ] && grep -q "\"test\":" package.json; then
+            npm test
+          else
+            echo "No tests configured."
+          fi
